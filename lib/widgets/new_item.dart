@@ -1,19 +1,19 @@
-import 'dart:convert';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter/material.dart';
 import 'package:shopping/data/categories.dart';
-import 'package:http/http.dart' as http;
 import 'package:shopping/models/category.dart';
-import 'package:shopping/models/grocery_item.dart';
 
-class NewItem extends StatefulWidget {
+import '../providers/groceries_provider.dart';
+
+class NewItem extends ConsumerStatefulWidget {
   const NewItem({super.key});
 
   @override
-  State<NewItem> createState() => _NewItemState();
+  ConsumerState<NewItem> createState() => _NewItemState();
 }
 
-class _NewItemState extends State<NewItem> {
+class _NewItemState extends ConsumerState<NewItem> {
   final _formKey = GlobalKey<FormState>();
   var _enteredName = "";
   var _enteredQuantity = 1;
@@ -24,39 +24,39 @@ class _NewItemState extends State<NewItem> {
   void _saveItem() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      FocusScope.of(context).unfocus();
       setState(() {
         _isSending = true;
       });
-      final url = Uri.https(
-          'shopping-cfbc5-default-rtdb.europe-west1.firebasedatabase.app',
-          'shopping-list.json');
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(
-          {
-            'name': _enteredName,
-            'quantity': _enteredQuantity,
-            'category': _selectedCategory.title,
-          },
-        ),
-      );
-      final Map<String, dynamic> resData = jsonDecode(response.body);
+
+      try {
+        await ref.read(groceriesProvider.notifier).saveGroceryItem(
+              _enteredName,
+              _enteredQuantity,
+              _selectedCategory,
+            );
+      } on Exception catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Oops something went wrong, please try again later.'),
+          ),
+        );
+        setState(() {
+          _isSending = false;
+        });
+        return;
+      }
 
       if (!context.mounted) {
         return;
       }
 
-      Navigator.of(context).pop(
-        GroceryItem(
-          id: resData['name'],
-          name: _enteredName,
-          quantity: _enteredQuantity,
-          category: _selectedCategory,
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Item added to the list.'),
         ),
       );
+      Navigator.of(context).pop();
     }
   }
 

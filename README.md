@@ -1,16 +1,26 @@
-# shopping
+# Flutter Shopping List App
 
-A new Flutter project.
+This is a simple shopping list app built using Flutter. It serves as a demonstration of various technologies and concepts, including Riverpod for state management, Firebase Realtime Database for backend storage, and error handling for a smooth user experience.
+
+## Features
+
+- Add and remove items on your shopping list.
+- Realtime synchronization across devices using Firebase Realtime Database.
+- Smooth and responsive user interface powered by Flutter.
+- Error handling to handle network issues and provide user-friendly error messages.
+
+## Technologies Used
+
+- Flutter: A powerful framework for building cross-platform mobile applications.
+- Riverpod: A state management solution for Flutter, providing a simple and intuitive way to manage app state.
+- Firebase Realtime Database: A NoSQL database provided by Firebase, enabling seamless data synchronization in real time.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+To run the app on your local machine, follow these steps:
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Clone the repository.
+2. Set up Firebase Realtime Database.
+3. Create a ```config.dart``` file in the ```lib``` folder and add the following line with your own database endpoint:  
+   ```const String databaseUrl = 'YOUR_DATABASE_URL'; ```
+4. Run the app using Flutter CLI or your preferred IDE.
